@@ -146,39 +146,19 @@ const columns = [
 ];
 
 const TokensTable = ({ date }) => {
-  const [pagination, setPagination] = useState({
-    page: 1,
-    perPage: 10,
-  });
-  // const [date, setDate] = useState(moment(1649462400000));
   const { loading, data } = useQuery(TOKENS_BY_DATE, {
     variables: {
       startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
       endDate: date?.clone().utc().startOf("day").unix(),
-      // first: pagination.perPage,
-      // skip:
-      //   pagination.page > 1 ? (pagination.page - 1) * pagination.perPage : 0,
     },
     skip: !date,
   });
-
-  const onChange = (newPage, newPageSize) => {
-    setPagination({
-      page: newPage,
-      perPage: newPageSize,
-    });
-  };
 
   return (
     <Table
       loading={loading}
       columns={columns}
       dataSource={data?.tokens}
-      // pagination={{
-      //   pageSize: pagination.perPage,
-      //   onChange: onChange,
-      //   current: pagination.page,
-      // }}
     />
   );
 };

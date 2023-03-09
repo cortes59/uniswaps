@@ -4,6 +4,7 @@ import { useState } from "react";
 import "./App.css";
 import TokensTable from "./components/tables/TokensTable";
 import TopPoolsTable from "./components/tables/TopPoolsTable";
+import TransactionsTable from "./components/tables/TransactionsTable";
 
 function App() {
   const [date, setDate] = useState(moment());
@@ -20,7 +21,8 @@ function App() {
           console.log({ val, _ });
         }}
       />
-      <TokensTable date={date} />
+      {/* <TokensTable date={date} /> */}
+      <TransactionsTable date={date} />
     </div>
   );
 }

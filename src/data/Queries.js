@@ -43,7 +43,13 @@ export const TOKENS_BY_DATE = gql`
     tokens(
       first: $first
       skip: $skip
-      where: { tokenDayData_: { date_gte: $startDate, date_lte: $endDate, date: $endDate } }
+      where: {
+        tokenDayData_: {
+          date_gte: $startDate
+          date_lte: $endDate
+          date: $endDate
+        }
+      }
     ) {
       id
       totalValueLocked
@@ -62,6 +68,61 @@ export const TOKENS_BY_DATE = gql`
         close
         totalValueLocked
         volume
+      }
+    }
+  }
+`;
+
+export const TRANSACTIONS_BY_DATE = gql`
+  query transactionsByDate($startDate: Int, $endDate: Int) {
+    transactions(
+      where: { timestamp_lte: $endDate, timestamp_gte: $startDate }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      id
+      timestamp
+      burns {
+        amount
+        amount0
+        amount1
+        amountUSD
+        token1 {
+          symbol
+        }
+        token0 {
+          symbol
+        }
+        owner
+      }
+      mints {
+        owner
+        sender
+        amountUSD
+        amount
+        amount0
+        amount1
+        token0 {
+          symbol
+        }
+        token1 {
+          symbol
+        }
+      }
+      swaps {
+        id
+        sender
+        recipient
+        timestamp
+        amount0
+        amount1
+        amountUSD
+        token0 {
+          symbol
+        }
+        token1 {
+          symbol
+        }
       }
     }
   }

@@ -25,3 +25,9 @@ export function formatChangePercentage(oldPrice, newPrice) {
   }
 }
 
+export function formatAmount(amount) {
+  if ((amount < 1 && amount > 0) || (amount > -1 && amount < 0))
+    return parseFloat(amount).toFixed(8);
+
+  return parseFloat(amount).toFixed(2);
+}
