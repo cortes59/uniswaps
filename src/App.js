@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { DatePicker } from "antd";
+import moment from "moment";
+import { useState } from "react";
+import "./App.css";
+import TokensTable from "./components/tables/TokensTable";
+import TopPoolsTable from "./components/tables/TopPoolsTable";
 
 function App() {
+  const [date, setDate] = useState(moment());
+  // console.log({ date });
+
+  // const onDateChange = ()
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <TopPoolsTable /> */}
+      <DatePicker
+        // defaultValue={date}
+        onChange={(_, val) => {
+          setDate(moment(val));
+          console.log({ val, _ });
+        }}
+      />
+      <TokensTable date={date} />
     </div>
   );
 }
