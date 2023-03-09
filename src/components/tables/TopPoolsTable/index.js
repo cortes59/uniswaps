@@ -5,6 +5,13 @@ import { formatPrice, formatVolume } from "../../../utils/formatters";
 
 const columns = [
   {
+    title: "Pool",
+    key: 'pool',
+    render(record){ 
+      return <p>{record.id}</p>
+    }
+  },
+  {
     title: "Pair",
     key: "symbol",
     render(record) {
