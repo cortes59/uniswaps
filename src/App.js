@@ -26,17 +26,29 @@ function App() {
           {
             label: "Top Pools",
             key: "1",
-            children: <TopPoolsTable date={date} />,
+            children: (
+              <div className="container">
+                <TopPoolsTable date={date} />
+              </div>
+            ),
           },
           {
             label: "Tokens",
             key: "2",
-            children: <TokensTable date={date} />,
+            children: (
+              <div className="container">
+                <TokensTable date={date} />
+              </div>
+            ),
           },
           {
             label: "Transactions",
             key: "3",
-            children: <TransactionsTable date={date} />,
+            children: (
+              <div className="container">
+                <TransactionsTable date={date} />
+              </div>
+            ),
           },
         ]}
       />

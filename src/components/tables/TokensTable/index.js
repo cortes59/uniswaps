@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { TOKENS_BY_DATE } from "../../../data/Queries";
 import {
   formatChangePercentage,
@@ -144,20 +144,29 @@ const columns = [
 ];
 
 const TokensTable = ({ date }) => {
-  const { loading, data } = useQuery(TOKENS_BY_DATE, {
-    variables: {
-      startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
-      endDate: date?.clone().utc().startOf("day").unix(),
-    },
+  const variables = {
+    startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
+    endDate: date?.clone().utc().startOf("day").unix(),
+  };
+  const { loading, data, refetch } = useQuery(TOKENS_BY_DATE, {
+    variables,
     skip: !date,
   });
 
+  const onRefresh = () => {
+    refetch(variables);
+  };
+
   return (
-    <Table
-      loading={loading}
-      columns={columns}
-      dataSource={data?.tokens}
-    />
+    <div>
+      <div class="refetch-container">
+        <Button type="primary" onClick={onRefresh} disabled={loading}>
+          Refresh
+        </Button>
+      </div>
+
+      <Table loading={loading} columns={columns} dataSource={data?.tokens} />
+    </div>
   );
 };
 

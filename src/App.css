@@ -48,3 +48,13 @@
 .date-picker-container {
   padding: 20px;
 }
+
+.container {
+  padding: 20px; 
+}
+
+.refetch-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}

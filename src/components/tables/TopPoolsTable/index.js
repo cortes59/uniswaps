@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import { TOP_POOLS_QUERY } from "../../../data/Queries";
 import { formatPrice, formatVolume } from "../../../utils/formatters";
 
@@ -44,9 +44,22 @@ const columns = [
 ];
 
 const TopPoolsTable = () => {
-  const { loading, data } = useQuery(TOP_POOLS_QUERY);
+  const { loading, data, refetch } = useQuery(TOP_POOLS_QUERY);
 
-  return <Table loading={loading} columns={columns} dataSource={data?.pools} />;
+  const onRefresh = () => {
+    refetch();
+  };
+
+  return (
+    <div>
+      <div className="refetch-container">
+        <Button type="primary" onClick={onRefresh} disabled={loading}>
+          Refresh
+        </Button>
+      </div>
+      <Table loading={loading} columns={columns} dataSource={data?.pools} />
+    </div>
+  );
 };
 
 export default TopPoolsTable;

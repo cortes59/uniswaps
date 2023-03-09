@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import moment from "moment";
 import { TRANSACTIONS_BY_DATE } from "../../../data/Queries";
 import { formatAmount, formatPrice } from "../../../utils/formatters";
@@ -72,20 +72,34 @@ const columns = [
 ];
 
 const TransactionsTable = ({ date }) => {
-  const { loading, data } = useQuery(TRANSACTIONS_BY_DATE, {
-    variables: {
-      startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
-      endDate: date?.clone().utc().startOf("day").unix(),
-    },
+  const variables = {
+    startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
+    endDate: date?.clone().utc().startOf("day").unix(),
+  };
+
+  const { loading, data, refetch } = useQuery(TRANSACTIONS_BY_DATE, {
+    variables,
     skip: !date,
   });
 
+  const onRefresh = () => {
+    refetch(variables);
+  };
+
   return (
-    <Table
-      loading={loading}
-      columns={columns}
-      dataSource={data?.transactions}
-    />
+    <div>
+      <div class="refetch-container">
+        <Button type="primary" onClick={onRefresh} disabled={loading}>
+          Refresh
+        </Button>
+      </div>
+
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data?.transactions}
+      />
+    </div>
   );
 };
 
