@@ -17,9 +17,16 @@ export const TEST_QUERY = gql`
 
 export const TOP_POOLS_QUERY = gql`
   query getTopPools($first: Int, $skip: Int) {
-    pools(first: $first, skip: $skip, orderBy: volume, orderDirection: desc) {
+    pools(
+      first: $first
+      skip: $skip
+      orderBy: volumeUSD
+      orderDirection: desc
+    ) {
       id
       totalValueLockedUSD
+      totalValueLockedToken0
+      totalValueLockedToken1
       volumeUSD
       liquidity
       token1 {

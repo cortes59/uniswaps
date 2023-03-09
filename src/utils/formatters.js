@@ -5,7 +5,7 @@ export function formatPrice(price) {
     return `$${parseFloat(price).toFixed(8)}`;
   }
 
-  return `$${parseFloat(price).toFixed(2)}`;
+  return `$${abbreviate(price, 2)}`;
 }
 
 export function formatVolume(volume) {

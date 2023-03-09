@@ -44,3 +44,7 @@
 .decrease-color {
   color: red;
 }
+
+.date-picker-container {
+  padding: 20px;
+}

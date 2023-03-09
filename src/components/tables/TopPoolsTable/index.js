@@ -1,53 +1,52 @@
 import { useQuery } from "@apollo/client";
 import { Table } from "antd";
-import { useState } from "react";
 import { TOP_POOLS_QUERY } from "../../../data/Queries";
+import { formatPrice, formatVolume } from "../../../utils/formatters";
 
 const columns = [
   {
-    title: "Token",
+    title: "Pair",
     key: "symbol",
-    dataIndex: "symbol",
-  },
-  {
-    title: "Name",
-    key: "name",
-    dataIndex: "name",
-  },
-  {
-    title: "Open",
-    key: "openPrice",
     render(record) {
-      if (!record.tokenDayData.length) return "-";
-      return record.tokenDayData[0].open;
+      return (
+        <p>
+          {record.token0.symbol} / {record.token1.symbol}
+        </p>
+      );
     },
   },
   {
-    title: "Close",
-    key: "closePrice",
+    title: "TVL",
+    key: "totalValueLocked",
     render(record) {
-      if (!record.tokenDayData.length) return "-";
-      return record.tokenDayData[0].close;
+      return (
+        <p>
+          {formatVolume(record.totalValueLockedToken0)} /{" "}
+          {formatVolume(record.totalValueLockedToken1)}
+        </p>
+      );
+    },
+  },
+  {
+    title: "TVL USD",
+    key: "totalValueLockedUSD",
+    render(record) {
+      return <p>{formatPrice(record.totalValueLockedUSD)}</p>;
     },
   },
   {
     title: "24H Volume",
     key: "volume",
     render(record) {
-      if (!record.tokenDayData.length) return "-";
-      return record.tokenDayData[0].volume;
+      return <p>{formatVolume(record.volumeUSD)}</p>;
     },
   },
 ];
-const TopPoolsTable = () => {
-  const [perPage, setPerPage] = useState(10);
-  const [page, setPage] = useState(1);
-  const { loading, data } = useQuery(TOP_POOLS_QUERY, {
-    variables: { first: perPage, skip: page > 1 ? (page - 1) * perPage : 0 },
-  });
 
-  console.log({ data });
-  return <Table columns={columns} dataSource={data?.pools} />;
+const TopPoolsTable = () => {
+  const { loading, data } = useQuery(TOP_POOLS_QUERY);
+
+  return <Table loading={loading} columns={columns} dataSource={data?.pools} />;
 };
 
 export default TopPoolsTable;

@@ -1,19 +1,8 @@
 import { useQuery } from "@apollo/client";
 import { Table } from "antd";
 import moment from "moment";
-import { useState } from "react";
-import {
-  TOKENS_BY_DATE,
-  TOP_POOLS_QUERY,
-  TRANSACTIONS_BY_DATE,
-} from "../../../data/Queries";
-import {
-  formatAmount,
-  formatChangePercentage,
-  formatPrice,
-  formatVolume,
-} from "../../../utils/formatters";
-import { getValuesDiffClass } from "../../../utils/helpers";
+import { TRANSACTIONS_BY_DATE } from "../../../data/Queries";
+import { formatAmount, formatPrice } from "../../../utils/formatters";
 
 function getRecordType(record) {
   if (record.mints.length) return "mints";
@@ -39,7 +28,7 @@ const columns = [
         <>
           {record[type]?.map((item) => (
             <p key={item.id}>
-              {item.token0.symbol}/{item.token1.symbol}
+              {item.token0.symbol} / {item.token1.symbol}
             </p>
           ))}
         </>
@@ -90,7 +79,6 @@ const TransactionsTable = ({ date }) => {
     },
     skip: !date,
   });
-  console.log(data);
 
   return (
     <Table

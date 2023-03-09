@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Table } from "antd";
-import moment from "moment";
-import { useState } from "react";
-import { TOKENS_BY_DATE, TOP_POOLS_QUERY } from "../../../data/Queries";
+import { TOKENS_BY_DATE } from "../../../data/Queries";
 import {
   formatChangePercentage,
   formatPrice,
