@@ -3,7 +3,9 @@ import { Button, Table } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import { TRANSACTIONS_BY_DATE } from "../../../data/Queries";
+import { formatTableSorting } from "../../../utils/formatTableSorting";
 import { formatAmount, formatPrice } from "../../../utils/formatters";
+import { numberSorter } from "../../../utils/sorters";
 import InfinitePagination from "../../InfinitePagination";
 
 function getRecordType(record) {
@@ -67,6 +69,8 @@ const columns = [
   {
     title: "Timestamp",
     key: "timestamp",
+    sortKey: "timestamp",
+    sorter: numberSorter("timestamp"),
     render(record) {
       return <p>{moment(parseInt(record.timestamp) * 1000).fromNow()}</p>;
     },
@@ -77,6 +81,8 @@ const TransactionsTable = ({ date }) => {
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
+    orderBy: "timestamp",
+    orderDirection: "desc",
   });
 
   const variables = {
@@ -84,6 +90,8 @@ const TransactionsTable = ({ date }) => {
     endDate: date?.clone().utc().startOf("day").unix(),
     first: pagination.pageSize,
     skip: pagination.page > 1 ? (pagination.page - 1) * pagination.pageSize : 0,
+    orderBy: pagination.orderBy,
+    orderDirection: pagination.orderDirection,
   };
 
   const { loading, data, refetch } = useQuery(TRANSACTIONS_BY_DATE, {
@@ -94,6 +102,14 @@ const TransactionsTable = ({ date }) => {
   const onRefresh = () => {
     refetch(variables);
   };
+
+  const onChange = (_, __, order) => {
+    const orderData = formatTableSorting(order);
+    setPagination({ ...pagination, ...orderData });
+  };
+
+  const onPaginationChange = (newPagination) =>
+    setPagination({ ...pagination, ...newPagination });
 
   return (
     <div>
@@ -108,11 +124,12 @@ const TransactionsTable = ({ date }) => {
         columns={columns}
         dataSource={data?.transactions}
         pagination={false}
+        onChange={onChange}
       />
       <InfinitePagination
         page={pagination.page}
         pageSize={pagination.pageSize}
-        onChange={setPagination}
+        onChange={onPaginationChange}
       />
     </div>
   );

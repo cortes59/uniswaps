@@ -22,8 +22,20 @@ const InfinitePagination = ({
     onChange({ page, pageSize: value });
   };
 
+  const onFirstPageClick = () => onChange({ page: 1, pageSize });
+
   return (
     <div className="infinity-pagination">
+      {page > 1 && (
+        <Button
+          type="link"
+          size="small"
+          disabled={page === 1}
+          onClick={onFirstPageClick}
+        >
+          First Page
+        </Button>
+      )}
       <Button
         type="primary"
         size="small"

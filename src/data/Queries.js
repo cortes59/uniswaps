@@ -16,12 +16,19 @@ export const TEST_QUERY = gql`
 `;
 
 export const TOP_POOLS_QUERY = gql`
-  query getTopPools($first: Int, $skip: Int) {
+  query getTopPools(
+    $first: Int
+    $skip: Int
+    $orderBy: Pool_orderBy
+    $orderDirection: OrderDirection
+  ) {
     pools(
+      orderBy: $orderBy
+      orderDirection: $orderDirection
       first: $first
       skip: $skip
-      orderBy: volumeUSD
-      orderDirection: desc
+      orderBy: $orderBy
+      orderDirection: $orderDirection
     ) {
       id
       totalValueLockedUSD
@@ -81,13 +88,20 @@ export const TOKENS_BY_DATE = gql`
 `;
 
 export const TRANSACTIONS_BY_DATE = gql`
-  query transactionsByDate($startDate: Int, $endDate: Int, $first: Int, $skip: Int) {
+  query transactionsByDate(
+    $startDate: Int
+    $endDate: Int
+    $first: Int
+    $skip: Int
+    $orderBy: Transaction_orderBy
+    $orderDirection: OrderDirection
+  ) {
     transactions(
       first: $first
       skip: $skip
       where: { timestamp_lte: $endDate, timestamp_gte: $startDate }
-      orderBy: timestamp
-      orderDirection: desc
+      orderBy: $orderBy
+      orderDirection: $orderDirection 
     ) {
       id
       timestamp
