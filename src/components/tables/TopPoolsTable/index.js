@@ -1,15 +1,17 @@
 import { useQuery } from "@apollo/client";
 import { Button, Table } from "antd";
+import { useState } from "react";
 import { TOP_POOLS_QUERY } from "../../../data/Queries";
 import { formatPrice, formatVolume } from "../../../utils/formatters";
+import InfinitePagination from "../../InfinitePagination";
 
 const columns = [
   {
     title: "Pool",
-    key: 'pool',
-    render(record){ 
-      return <p>{record.id}</p>
-    }
+    key: "pool",
+    render(record) {
+      return <p>{record.id}</p>;
+    },
   },
   {
     title: "Pair",
@@ -51,7 +53,17 @@ const columns = [
 ];
 
 const TopPoolsTable = () => {
-  const { loading, data, refetch } = useQuery(TOP_POOLS_QUERY);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+  const { loading, data, refetch } = useQuery(TOP_POOLS_QUERY, {
+    variables: {
+      first: pagination.pageSize,
+      skip:
+        pagination.page > 1 ? (pagination.page - 1) * pagination.pageSize : 0,
+    },
+  });
 
   const onRefresh = () => {
     refetch();
@@ -64,7 +76,17 @@ const TopPoolsTable = () => {
           Refresh
         </Button>
       </div>
-      <Table loading={loading} columns={columns} dataSource={data?.pools} />
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data?.pools}
+        pagination={false}
+      />
+      <InfinitePagination
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        onChange={setPagination}
+      />
     </div>
   );
 };

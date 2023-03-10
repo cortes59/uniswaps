@@ -1,8 +1,10 @@
 import { useQuery } from "@apollo/client";
 import { Button, Table } from "antd";
 import moment from "moment";
+import { useState } from "react";
 import { TRANSACTIONS_BY_DATE } from "../../../data/Queries";
 import { formatAmount, formatPrice } from "../../../utils/formatters";
+import InfinitePagination from "../../InfinitePagination";
 
 function getRecordType(record) {
   if (record.mints.length) return "mints";
@@ -72,9 +74,16 @@ const columns = [
 ];
 
 const TransactionsTable = ({ date }) => {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+  });
+
   const variables = {
     startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
     endDate: date?.clone().utc().startOf("day").unix(),
+    first: pagination.pageSize,
+    skip: pagination.page > 1 ? (pagination.page - 1) * pagination.pageSize : 0,
   };
 
   const { loading, data, refetch } = useQuery(TRANSACTIONS_BY_DATE, {
@@ -98,6 +107,12 @@ const TransactionsTable = ({ date }) => {
         loading={loading}
         columns={columns}
         dataSource={data?.transactions}
+        pagination={false}
+      />
+      <InfinitePagination
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        onChange={setPagination}
       />
     </div>
   );

@@ -81,8 +81,10 @@ export const TOKENS_BY_DATE = gql`
 `;
 
 export const TRANSACTIONS_BY_DATE = gql`
-  query transactionsByDate($startDate: Int, $endDate: Int) {
+  query transactionsByDate($startDate: Int, $endDate: Int, $first: Int, $skip: Int) {
     transactions(
+      first: $first
+      skip: $skip
       where: { timestamp_lte: $endDate, timestamp_gte: $startDate }
       orderBy: timestamp
       orderDirection: desc

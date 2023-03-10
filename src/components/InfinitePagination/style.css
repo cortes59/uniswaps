@@ -1,0 +1,10 @@
+.infinity-pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.infinity-pagination > * {
+  margin-left: 10px;
+}

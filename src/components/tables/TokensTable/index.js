@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Button, Table } from "antd";
+import { useState } from "react";
 import { TOKENS_BY_DATE } from "../../../data/Queries";
 import {
   formatChangePercentage,
@@ -7,6 +8,7 @@ import {
   formatVolume,
 } from "../../../utils/formatters";
 import { getValuesDiffClass } from "../../../utils/helpers";
+import InfinitePagination from "../../InfinitePagination";
 
 function DiffPercentage({ oldVal, newVal }) {
   return (
@@ -144,9 +146,15 @@ const columns = [
 ];
 
 const TokensTable = ({ date }) => {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
+  });
   const variables = {
     startDate: date?.clone().utc().startOf("day").subtract(1, "day").unix(),
     endDate: date?.clone().utc().startOf("day").unix(),
+    first: pagination.pageSize,
+    skip: pagination.page > 1 ? (pagination.page - 1) * pagination.pageSize : 0,
   };
   const { loading, data, refetch } = useQuery(TOKENS_BY_DATE, {
     variables,
@@ -165,7 +173,18 @@ const TokensTable = ({ date }) => {
         </Button>
       </div>
 
-      <Table loading={loading} columns={columns} dataSource={data?.tokens} />
+      <Table
+        loading={loading}
+        columns={columns}
+        dataSource={data?.tokens}
+        pagination={false}
+      />
+
+      <InfinitePagination
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        onChange={setPagination}
+      />
     </div>
   );
 };
